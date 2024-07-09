@@ -1,6 +1,6 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth import get_user_model
 
 from apps.common.models import CoreModel
 
@@ -47,29 +47,25 @@ class Amenity(CoreModel):
         verbose_name_plural = _("Удобства")
 
 
+class PropertyType(models.Model):
+    name = models.CharField(max_length=255, verbose_name=_("Название"))
+    icon = models.FileField(upload_to='images/categories/icons/', verbose_name=_("Иконка"))
+
+    class Meta:
+        verbose_name = _("Тип недвижимости")
+        verbose_name_plural = _("Типы недвижимости")
+
+
 class Property(CoreModel):
-    TYPE_CHOICES = (
-        ("house", _("Дом")),
-        ("apartment", _("Квартира")),
-        ("hotel", _("Отель")),
-    )
-    property_type = models.CharField(
-        max_length=20, choices=TYPE_CHOICES, verbose_name=_("Тип недвижимости")
-    )
-    address = models.ForeignKey(
-        Address, on_delete=models.CASCADE, verbose_name=_("Адрес")
-    )
+    property_type = models.ForeignKey(PropertyType, related_name='properties', on_delete=models.SET_NULL, null=True,
+                                      verbose_name=_("Тип недвидимости"))
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, verbose_name=_("Адрес"))
     description = models.TextField(blank=True, verbose_name=_("Описание"))
     amenities = models.ManyToManyField(Amenity, blank=True, verbose_name=_("Удобства"))
     available = models.BooleanField(default=True, verbose_name=_("Доступно"))
-    procent = models.DecimalField(
-        max_digits=10, decimal_places=2, default=1.0, blank=True
-    )
     star_rating = models.IntegerField(verbose_name=_("Рейтинг звёзд"))
     name = models.CharField(max_length=100, verbose_name=_("Название"))
-    rooms = models.IntegerField(
-        help_text=_("Количество доступных комнат"), verbose_name=_("Комнаты")
-    )
+    rooms = models.IntegerField(help_text=_("Количество комнат"), verbose_name=_("Комнаты"))
     verified = models.BooleanField(default=False, verbose_name=_("Проверено"))
 
     class Meta:
@@ -78,9 +74,7 @@ class Property(CoreModel):
 
 
 class PropertyPhoto(CoreModel):
-    property = models.ForeignKey(
-        Property, on_delete=models.CASCADE, verbose_name=_("Недвижимость")
-    )
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, verbose_name=_("Недвижимость"))
     photo = models.ImageField(upload_to="property_photos", verbose_name=_("Фото"))
 
     class Meta:
@@ -104,20 +98,13 @@ class RoomAmenity(CoreModel):
 
 
 class Room(CoreModel):
-    hotel = models.ForeignKey(
-        Property,
-        on_delete=models.CASCADE,
-        related_name="hotel_rooms",
-        verbose_name=_("Отель"),
-    )
+    hotel = models.ForeignKey(Property, on_delete=models.CASCADE, related_name="hotel_rooms", verbose_name=_("Отель"))
     room_number = models.CharField(max_length=20, verbose_name=_("Номер комнаты"))
     room_type = models.CharField(max_length=20, verbose_name=_("Тип комнаты"))
-    default_price_per_night = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name=_("Стандартная цена за ночь")
-    )
-    amenities = models.ManyToManyField(
-        RoomAmenity, blank=True, verbose_name=_("Удобства")
-    )
+    default_price_per_night = models.DecimalField(max_digits=10, decimal_places=2,
+                                                  verbose_name=_("Стандартная цена за ночь")
+                                                  )
+    amenities = models.ManyToManyField(RoomAmenity, blank=True, verbose_name=_("Удобства"))
     available = models.BooleanField(default=True, verbose_name=_("Доступна"))
     max_adults = models.IntegerField(verbose_name=_('Максимум взрослых'))
     max_children = models.IntegerField(verbose_name=_('Максимум детей'))
@@ -134,6 +121,10 @@ class RoomPhotos(CoreModel):
     room = models.ForeignKey(Room, on_delete=models.CASCADE, verbose_name=_("Комната"))
     photo = models.ImageField(upload_to="room_photos", verbose_name=_("Фото"))
 
+    class Meta:
+        verbose_name = _("Фотография комнаты")
+        verbose_name_plural = _("Фотографии комнат")
+
 
 class RoomPrice(CoreModel):
     rooms = models.ManyToManyField(Room, related_name='special_prices', verbose_name=_("Комнаты"))
@@ -147,28 +138,16 @@ class RoomPrice(CoreModel):
 
 
 class Review(models.Model):
-    property = models.ForeignKey(
-        "Property",
-        on_delete=models.CASCADE,
-        related_name="reviews",
-        verbose_name=_("Недвижимость"),
-    )
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="reviews",
-        verbose_name=_("Пользователь"),
-    )
-    comment = models.TextField(
-        blank=True,
-        null=True,
-        help_text="Comment about the property",
-        verbose_name=_("Коммент"),
-    )
-    created_at = models.DateTimeField(
-        auto_now_add=True, verbose_name=_("Дата создания")
-    )
+    property = models.ForeignKey("Property", on_delete=models.CASCADE, related_name="reviews",
+                                 verbose_name=_("Недвижимость"))
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews", verbose_name=_("Пользователь"))
+    comment = models.TextField(blank=True, null=True, help_text="Comment about the property", verbose_name=_("Коммент"))
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Дата создания"))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("Дата обновления"))
+
+    class Meta:
+        verbose_name = _("Отзыв")
+        verbose_name_plural = _("Отзывы")
 
     def __str__(self):
         return f"Review by {self.user} for {self.property.name}"

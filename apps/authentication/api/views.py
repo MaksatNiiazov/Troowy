@@ -14,11 +14,9 @@ from apps.authentication.utils import (
 from .serializers import (
     CustomUserSerializer,
     VerifyCodeSerializer,
-    UserProfileSerializer,
     UserAddressSerializer,
     UserAddressUpdateSerializer,
-    NotificationSerializer,
-    UserRetireeSerializer
+
 )
 
 
@@ -87,51 +85,6 @@ class VerifyCodeView(generics.CreateAPIView):
         }, status=status.HTTP_200_OK)
 
 
-class UpdateUserRetireeStatusAPIView(generics.UpdateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserRetireeSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_object(self):
-        return self.request.user
-
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        is_retiree = request.data.get('is_retiree', instance.is_retiree)
-
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(is_retiree=is_retiree)
-
-        return Response({'message': 'Статус пенсионера успешно обновлен.'})
-
-
-class UserProfileUpdateView(generics.RetrieveUpdateAPIView):
-    serializer_class = UserProfileSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_object(self):
-        return self.request.user
-
-    def put(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        # Update first_visit status if necessary
-        if all(serializer.validated_data.get(field) for field in ['full_name', 'date_of_birth', 'email']):
-            instance.first_visit = False
-            instance.save()
-
-        return Response({'message': 'Профиль пользователя успешно обновлен.'})
-
-    def get(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
-
-
 class UserAddressCreateAPIView(generics.ListCreateAPIView):
     queryset = UserAddress.objects.all()
     serializer_class = UserAddressSerializer
@@ -185,25 +138,3 @@ class UserDeleteAPIView(generics.DestroyAPIView):
 
         return Response({'message': 'Пользователь удален успешно.'}, status=status.HTTP_204_NO_CONTENT)
 
-
-class NotificationSettingsAPIView(generics.RetrieveUpdateAPIView):
-    serializer_class = NotificationSerializer
-
-    def get_object(self):
-        return self.request.user
-
-    def update(self, request, *args, **kwargs):
-        user = self.get_object()
-        fcm_token = request.data.get('fcm_token')
-        receive_notifications = request.data.get('receive_notifications')
-
-        if fcm_token is not None:
-            user.fcm_token = fcm_token
-            user.save()
-
-        if receive_notifications is not None:
-            user.receive_notifications = receive_notifications
-            user.save()
-
-        serializer = self.get_serializer(user)
-        return Response(serializer.data, {'message': 'Настройки уведомлений успешно обновлены.'})

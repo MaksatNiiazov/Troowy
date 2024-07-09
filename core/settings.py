@@ -15,6 +15,7 @@ from pathlib import Path
 from core.configurations.rest_framework_config import *
 from core.configurations.simpleui_config import *
 from core.configurations.smtp_config import *
+from core.configurations.spectacular_config import *
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
