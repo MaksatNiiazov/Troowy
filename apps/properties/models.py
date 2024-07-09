@@ -8,18 +8,10 @@ User = get_user_model()
 
 
 class Address(CoreModel):
-    line1 = models.CharField(
-        max_length=255,
-        verbose_name=_("Адресная строка 1"),
-        help_text=_("Адрес, почтовый ящик, название компании"),
-    )
-    line2 = models.CharField(
-        max_length=255,
-        verbose_name=_("Адресная строка 2"),
-        blank=True,
-        null=True,
-        help_text=_("Квартира, офис, подразделение, здание, этаж и т.д."),
-    )
+    line1 = models.CharField(max_length=255, verbose_name=_("Адресная строка 1"),
+                             help_text=_("Адрес, почтовый ящик, название компании"), )
+    line2 = models.CharField(max_length=255, verbose_name=_("Адресная строка 2"), blank=True, null=True,
+                             help_text=_("Квартира, офис, подразделение, здание, этаж и т.д."), )
     city = models.CharField(max_length=100, verbose_name=_("Город"))
     state_province = models.CharField(
         max_length=100, verbose_name=_("Штат/Провинция"), blank=True, null=True
@@ -102,12 +94,12 @@ class Room(CoreModel):
     room_number = models.CharField(max_length=20, verbose_name=_("Номер комнаты"))
     room_type = models.CharField(max_length=20, verbose_name=_("Тип комнаты"))
     default_price_per_night = models.DecimalField(max_digits=10, decimal_places=2,
-                                                  verbose_name=_("Стандартная цена за ночь")
-                                                  )
+                                                  verbose_name=_("Стандартная цена за ночь"))
     amenities = models.ManyToManyField(RoomAmenity, blank=True, verbose_name=_("Удобства"))
     available = models.BooleanField(default=True, verbose_name=_("Доступна"))
-    max_adults = models.IntegerField(verbose_name=_('Максимум взрослых'))
-    max_children = models.IntegerField(verbose_name=_('Максимум детей'))
+    max_adults = models.IntegerField(verbose_name=_("Максимум взрослых"))
+    max_children = models.IntegerField(verbose_name=_("Максимум детей"))
+    max_animals = models.IntegerField(verbose_name=_("Максимум животных"))
 
     class Meta:
         verbose_name = _("Комната")
