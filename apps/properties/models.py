@@ -41,11 +41,13 @@ class Amenity(CoreModel):
 
 class PropertyType(models.Model):
     name = models.CharField(max_length=255, verbose_name=_("Название"))
-    icon = models.FileField(upload_to='images/categories/icons/', verbose_name=_("Иконка"))
+    icon = models.FileField(upload_to='images/categories/icons/', verbose_name=_("Иконка"), null=True, blank=True)
 
     class Meta:
         verbose_name = _("Тип недвижимости")
         verbose_name_plural = _("Типы недвижимости")
+
+
 
 
 class Property(CoreModel):

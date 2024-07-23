@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("apps.openapi.urls")),
     path('users/', include('apps.authentication.urls')),
+    path('pages/', include('apps.pages.urls')),
     path("properties/", include('apps.properties.urls')),
 
     # path('chat/', include('apps.live_chat.urls')),

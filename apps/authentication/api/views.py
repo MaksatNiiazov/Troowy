@@ -19,7 +19,6 @@ from .serializers import (
 
 )
 
-
 class UserLoginView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer
@@ -137,4 +136,4 @@ class UserDeleteAPIView(generics.DestroyAPIView):
         user.delete()  # Удаляем пользователя
 
         return Response({'message': 'Пользователь удален успешно.'}, status=status.HTTP_204_NO_CONTENT)
-
+0

@@ -63,7 +63,12 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
 
     'apps.authentication',
+    'apps.pages',
     'apps.properties',
+    'apps.cars',
+    'apps.tours',
+    # 'apps.international_tours',
+    'apps.medical_tours',
 ]
 
 INSTALLED_APPS = [*DJANGO_APPS, *THIRD_PARTY_APPS, *PROJECT_APPS]

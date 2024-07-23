@@ -9,7 +9,7 @@ from .models import (
     Room,
     RoomAmenity,
     RoomPhotos,
-    RoomPrice, PaidService, PropertyPaidService,
+    RoomPrice, PaidService, PropertyPaidService, PropertyType
 )
 
 
@@ -37,6 +37,10 @@ class PropertyPaidServiceInline(nested_admin.NestedTabularInline):
     model = PropertyPaidService
     extra = 0
 
+
+@admin.register(PropertyType)
+class PropertyTypeAdmin(admin.ModelAdmin):
+    list_display = ["name"]
 
 @admin.register(Property)
 class PropertyAdmin(nested_admin.NestedModelAdmin):

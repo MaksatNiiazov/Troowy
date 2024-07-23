@@ -15,6 +15,7 @@ class PropertyFilter(filters.FilterSet):
         model = Property
         fields = ['location', 'date_start', 'date_end', 'adults', 'children', 'children_ages']
 
+
     # def filter_queryset(self, queryset):
     #     date_start = self.request.query_params.get('date_start')
     #     date_end = self.request.query_params.get('date_end')
