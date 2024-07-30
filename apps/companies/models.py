@@ -1,9 +1,10 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
-from apps.authentication.models import User
 from apps.common.models import CoreModel
+
+User = get_user_model()
 
 
 class Company(CoreModel):
@@ -38,7 +39,7 @@ class Company(CoreModel):
 
 class Worker(CoreModel):
     user = models.OneToOneField(
-        UserAccount,
+        User,
         on_delete=models.PROTECT,
         related_name="worker",
         verbose_name=_("Пользователь"),
@@ -61,8 +62,7 @@ class Worker(CoreModel):
 
 
 class ServicePayment(CoreModel):
-    worker = models.ForeignKey(Worker, on_delete=models.CASCADE, verbose_name=_("Комната"))
-    # service = models.ForeignKey(PaidService, on_delete=models.CASCADE, verbose_name=_("Платная услуга"))
+    worker = models.ForeignKey(Worker, on_delete=models.CASCADE, verbose_name=_("Работник"))
     date = models.DateField(verbose_name=_("Дата выполнения"))
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Цена"))
 
@@ -70,5 +70,3 @@ class ServicePayment(CoreModel):
         verbose_name = _("Оплата за услугу")
         verbose_name_plural = _("Оплаты за услуги")
 
-    def __str__(self):
-        return f"{self.room.room_number} - {self.service.name} - {self.date}"

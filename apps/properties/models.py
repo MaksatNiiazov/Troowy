@@ -18,6 +18,8 @@ class Address(CoreModel):
     )
     postal_code = models.CharField(max_length=20, verbose_name=_("Почтовый индекс"))
     country = models.CharField(max_length=100, verbose_name=_("Страна"))
+    longitude = models.FloatField(verbose_name=_("Долгота"), blank=True, null=True)
+    latitude = models.FloatField(verbose_name=_("Широта"), blank=True, null=True)
 
     class Meta:
         verbose_name = _("Адрес")
@@ -46,8 +48,6 @@ class PropertyType(models.Model):
     class Meta:
         verbose_name = _("Тип недвижимости")
         verbose_name_plural = _("Типы недвижимости")
-
-
 
 
 class Property(CoreModel):
@@ -172,3 +172,15 @@ class PropertyPaidService(CoreModel):
 
     def __str__(self):
         return f"{self.property.name} - {self.service.name}"
+
+
+class Booking(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.PROTECT, related_name='bookings')
+    guest_name = models.ForeignKey(User, on_delete=models.PROTECT, related_name='bookings')
+    start_date = models.DateField()
+    end_date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'Booking for {self.room.room_number} from {self.start_date} to {self.end_date}'
