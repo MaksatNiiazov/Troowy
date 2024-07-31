@@ -57,6 +57,7 @@ DJANGO_APPS = [
     'rest_framework_simplejwt',
     'drf_spectacular',
     'mptt',
+    'nested_admin',
     'channels',
 ]
 

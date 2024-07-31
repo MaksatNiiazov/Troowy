@@ -13,19 +13,19 @@ from .models import (
 )
 
 
-class PropertyPhotoInline(nested_admin.NestedTabularInline):
+class PropertyPhotoInline(nested_admin.NestedStackedInline):
     model = PropertyPhoto
     extra = 0
     fields = ["photo"]
 
 
-class RoomPhotosInline(nested_admin.NestedTabularInline):
+class RoomPhotosInline(nested_admin.NestedStackedInline):
     model = RoomPhotos
     extra = 0
     fields = ["photo"]
 
 
-class RoomInline(nested_admin.NestedTabularInline):
+class RoomInline(nested_admin.NestedStackedInline):
     model = Room
     inlines = [RoomPhotosInline]
     extra = 0
@@ -33,7 +33,7 @@ class RoomInline(nested_admin.NestedTabularInline):
               'amenities']
 
 
-class PropertyPaidServiceInline(nested_admin.NestedTabularInline):
+class PropertyPaidServiceInline(nested_admin.NestedStackedInline):
     model = PropertyPaidService
     extra = 0
 
@@ -41,6 +41,7 @@ class PropertyPaidServiceInline(nested_admin.NestedTabularInline):
 @admin.register(PropertyType)
 class PropertyTypeAdmin(admin.ModelAdmin):
     list_display = ["name"]
+
 
 @admin.register(Property)
 class PropertyAdmin(nested_admin.NestedModelAdmin):
@@ -76,7 +77,6 @@ class PropertyAdmin(nested_admin.NestedModelAdmin):
                     "rooms",
                     "verified",
                     "available",
-                    "procent",
                 )
             },
         ),

@@ -48,6 +48,8 @@ class PropertyType(models.Model):
     class Meta:
         verbose_name = _("Тип недвижимости")
         verbose_name_plural = _("Типы недвижимости")
+    def __str__(self):
+        return self.name
 
 
 class Property(CoreModel):
@@ -117,7 +119,7 @@ class RoomPhotos(CoreModel):
 
     class Meta:
         verbose_name = _("Фотография комнаты")
-        verbose_name_plural = _("Фотографии комнат")
+        verbose_name_plural = _("Фотографии комнаты")
 
 
 class RoomPrice(CoreModel):

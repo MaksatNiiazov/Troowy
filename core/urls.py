@@ -25,6 +25,7 @@ urlpatterns = [
     path('users/', include('apps.authentication.urls')),
     path('pages/', include('apps.pages.urls')),
     path("properties/", include('apps.properties.urls')),
+    path("cars/", include('apps.cars.urls')),
 
     # path('chat/', include('apps.live_chat.urls')),
 ]
