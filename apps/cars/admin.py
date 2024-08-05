@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import City, Place, Car, Tariff, Service, ServiceType, Bid, Payment, Brand, BodyType, FuelType
+from .models import City, Place, Car, Tariff, Service, ServiceType, Bid, Brand, BodyType, FuelType
 
 
 @admin.register(City)
@@ -48,13 +48,6 @@ class BidAdmin(admin.ModelAdmin):
     list_display = ('fio', 'phone', 'car', 'begin', 'end', 'begin_place', 'end_place', 'prepayment')
     search_fields = ('fio', 'phone', 'car__model')
     list_filter = ('car', 'begin', 'end', 'begin_place', 'end_place')
-
-
-@admin.register(Payment)
-class PaymentAdmin(admin.ModelAdmin):
-    list_display = ('bid', 'summ', 'transaction_id')
-    search_fields = ('bid__fio', 'transaction_id')
-    list_filter = ('bid',)
 
 
 @admin.register(Brand)

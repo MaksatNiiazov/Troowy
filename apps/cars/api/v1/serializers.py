@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.cars.models import City, Place, Car, Tariff, Service, ServiceType, Bid, Payment
+from apps.cars.models import City, Place, Car, Tariff, Service, ServiceType, Bid
 
 
 class CitySerializer(serializers.ModelSerializer):
@@ -41,10 +41,4 @@ class ServiceTypeSerializer(serializers.ModelSerializer):
 class BidSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bid
-        fields = '__all__'
-
-
-class PaymentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Payment
         fields = '__all__'

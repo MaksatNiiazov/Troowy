@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class City(models.Model):
     title = models.CharField(max_length=100, verbose_name="Название города")
     archive = models.BooleanField(default=False, verbose_name="Архив")
@@ -11,6 +12,7 @@ class City(models.Model):
         verbose_name = "Город"
         verbose_name_plural = "Города"
 
+
 class Brand(models.Model):
     name = models.CharField(max_length=100, verbose_name="Бренд")
 
@@ -20,6 +22,7 @@ class Brand(models.Model):
     class Meta:
         verbose_name = "Бренд"
         verbose_name_plural = "Бренды"
+
 
 class BodyType(models.Model):
     name = models.CharField(max_length=100, verbose_name="Тип кузова")
@@ -31,6 +34,7 @@ class BodyType(models.Model):
         verbose_name = "Тип кузова"
         verbose_name_plural = "Типы кузова"
 
+
 class FuelType(models.Model):
     name = models.CharField(max_length=100, verbose_name="Тип топлива")
 
@@ -40,6 +44,7 @@ class FuelType(models.Model):
     class Meta:
         verbose_name = "Тип топлива"
         verbose_name_plural = "Типы топлива"
+
 
 class Car(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, verbose_name="Бренд")
@@ -60,6 +65,7 @@ class Car(models.Model):
         verbose_name = "Автомобиль"
         verbose_name_plural = "Автомобили"
 
+
 class Place(models.Model):
     title = models.CharField(max_length=100, verbose_name="Название места")
     city = models.ForeignKey(City, on_delete=models.CASCADE, verbose_name="Город")
@@ -72,6 +78,7 @@ class Place(models.Model):
     class Meta:
         verbose_name = "Место выдачи/возврата"
         verbose_name_plural = "Места выдачи/возврата"
+
 
 class Tariff(models.Model):
     car = models.ForeignKey(Car, on_delete=models.CASCADE, verbose_name="Автомобиль")
@@ -87,6 +94,7 @@ class Tariff(models.Model):
         verbose_name = "Тариф"
         verbose_name_plural = "Тарифы"
 
+
 class ServiceType(models.Model):
     title = models.CharField(max_length=100, verbose_name="Название типа услуги")
 
@@ -96,6 +104,7 @@ class ServiceType(models.Model):
     class Meta:
         verbose_name = "Тип услуги"
         verbose_name_plural = "Типы услуг"
+
 
 class Service(models.Model):
     title = models.CharField(max_length=100, verbose_name="Название услуги")
@@ -109,6 +118,7 @@ class Service(models.Model):
     class Meta:
         verbose_name = "Услуга"
         verbose_name_plural = "Услуги"
+
 
 class Bid(models.Model):
     NEW = 'new'
@@ -130,8 +140,10 @@ class Bid(models.Model):
     car = models.ForeignKey(Car, on_delete=models.CASCADE, verbose_name="Автомобиль")
     begin = models.DateTimeField(verbose_name="Начало периода")
     end = models.DateTimeField(verbose_name="Окончание периода")
-    begin_place = models.ForeignKey(Place, related_name='begin_place', on_delete=models.CASCADE, verbose_name="Место выдачи")
-    end_place = models.ForeignKey(Place, related_name='end_place', on_delete=models.CASCADE, verbose_name="Место возврата")
+    begin_place = models.ForeignKey(Place, related_name='begin_place', on_delete=models.CASCADE,
+                                    verbose_name="Место выдачи")
+    end_place = models.ForeignKey(Place, related_name='end_place', on_delete=models.CASCADE,
+                                  verbose_name="Место возврата")
     services = models.ManyToManyField(Service, blank=True, verbose_name="Услуги")
     prepayment = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, verbose_name="Предоплата")
 
@@ -142,15 +154,3 @@ class Bid(models.Model):
         verbose_name = "Заявка"
         verbose_name_plural = "Заявки"
         ordering = ['-begin']
-
-class Payment(models.Model):
-    bid = models.ForeignKey(Bid, on_delete=models.CASCADE, verbose_name="Заявка")
-    summ = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Сумма оплаты")
-    transaction_id = models.CharField(max_length=100, verbose_name="Идентификатор транзакции")
-
-    def __str__(self):
-        return f"Оплата {self.bid} на сумму {self.summ}"
-
-    class Meta:
-        verbose_name = "Оплата"
-        verbose_name_plural = "Оплаты"

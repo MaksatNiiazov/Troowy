@@ -1,7 +1,7 @@
 from rest_framework import generics
-from apps.cars.models import City, Place, Car, Tariff, Service, ServiceType, Bid, Payment
+from apps.cars.models import City, Place, Car, Tariff, Service, ServiceType, Bid
 from .serializers import CitySerializer, PlaceSerializer, CarSerializer, TariffSerializer, ServiceSerializer, \
-    ServiceTypeSerializer, BidSerializer, PaymentSerializer
+    ServiceTypeSerializer, BidSerializer
 
 
 class CityListView(generics.ListAPIView):
@@ -38,7 +38,5 @@ class BidListView(generics.ListCreateAPIView):
     queryset = Bid.objects.all()
     serializer_class = BidSerializer
 
-
-class PaymentListView(generics.ListCreateAPIView):
-    queryset = Payment.objects.all()
-    serializer_class = PaymentSerializer
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
